@@ -1,0 +1,69 @@
+<form id="doimport-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" style="background:#fff;padding:10px;" >
+<div class="alert alert-warning" role="alert">从外部导入数据不可逆，请谨慎操作。请注意导入数据的字段类型及值是否必须，否则会导入失败</div>
+	{eq name="row.status" value="normal"}
+
+	<div class="alert alert-danger" role="alert">
+	 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	该文件数据已经导入过，是否要重新导入?</div>{/eq}
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+ <i class="fa fa-table"></i>目标表： {$row.table}表结构
+</button>
+<div class="collapse" id="collapseExample">
+  <div class="wells">
+    <table class="table table-bordered table-responsive">
+<caption>{$row.table}表结构<span class="label label-default"></span></caption>
+      <thead>
+        <tr>
+         <th>字段名</th>
+		 <th>注释</th>
+		 <th>类型</th>
+		 <th>是否为空</th>
+        </tr>
+      </thead>
+      <tbody>
+	  {volist name="list" id="vo"}
+        <tr>  
+		<td>{$vo['COLUMN_NAME']}</td>
+		<td>{$vo['COLUMN_COMMENT']}</td> 
+		 <td>{$vo['COLUMN_TYPE']}</td>
+		 <td>{$vo['IS_NULLABLE']}</td>
+		 </tr>
+		 {/volist}
+       
+		 
+      </tbody>
+    </table>
+  </div>
+</div>
+
+	<table class="table table-bordered table-responsive" style="overflow: auto;">
+	<caption>导入文件数据 根据{:__($row['head_type'])}匹配到<span class="label label-success">{$active_num}列</span>可导入</caption>
+      <thead>
+        <tr>
+        {for start="0" end="count($fields)"}
+         <th class="{in name="$fields[$i]" value="$importField"}success{else/}{/in}">{$fields[$i]}  
+         </th>
+         {/for}
+        </tr>
+      </thead>
+      <tbody>
+	  {volist name="values" id="vo"}
+        <tr>
+        {for start="0" end="count($vo)"}
+         <td class="{in name="$i" value="$active_col"}success{else/}{/in}">{$vo[$i]}</td>
+         {/for}
+        </tr>
+		{/volist}
+      </tbody>
+    </table>
+	
+
+	   <div class="form-group layer-footers">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+		<button type="button" class="btn btn-default" id="options"    data-title="修改导入设置" data-url="{:url('edit',['ids'=>$row['id'],'dialog'=>1])}">< 上一步修改导入设置</button>
+            <button type="button" id="submitbtn"   class="btn btn-success btn-embossed ">{:__('OK')}导入</button>
+            
+        </div>
+    </div>
+	</form>
